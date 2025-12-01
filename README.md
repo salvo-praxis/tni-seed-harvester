@@ -88,7 +88,7 @@ Some pairs rarely appear together. The five rarest pairings:
 | Fusion Plant + Refurbhut Investment | 2.3% | *Both in missing combos* |
 | Second Monitor + Undervoltage | 2.4% | *Both in missing combos* |
 
-Notice how the rarest pairs involve proposals from our two missing combinations. This isn't coincidence.
+Notice how the rarest pairs involve proposals from our two missing combinations.
 
 #### Proposals That Stick Together
 
