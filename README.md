@@ -84,7 +84,7 @@ Some pairs rarely appear together. The five rarest pairings:
 |------|-----------|-------|
 | Overvoltage + Undervoltage | 2.1% | *Contradictory policies* |
 | NetOps Research + PADU | 2.2% | |
-| Fusion Plant + Lobby against Tenabolt | 2.3% | *Faction conflict?* |
+| Fusion Plant + Lobby against Tenabolt | 2.3% | |
 | Fusion Plant + Refurbhut Investment | 2.3% | *Both in missing combos* |
 | Second Monitor + Undervoltage | 2.4% | *Both in missing combos* |
 
