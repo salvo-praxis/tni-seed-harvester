@@ -291,8 +291,8 @@ For resolutions other than 1440p or 1080p:
 
 1. **Harvester** (AHK script):
    - Clicks through game menus to start a new game with a seed
-   - Opens the Secretariat tablet and navigates to Proposals
-   - Screenshots the proposal cards
+   - Opens the Secretariat app and navigates to Proposals
+   - Screenshots the available proposals
    - Uses Tesseract OCR to extract text
    - Fuzzy-matches against known proposal patterns
    - Logs seed + proposals to CSV
