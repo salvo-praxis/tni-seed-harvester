@@ -58,7 +58,7 @@ The hunt continues...
 
 ### The Game's Hidden Hand
 
-The seed algorithm isn't purely random. It has preferences, biases, and (possibly) forbidden combinations.
+The seed algorithm isn't purely random.
 
 #### Slot Favoritism
 
