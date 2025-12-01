@@ -234,7 +234,7 @@ tni-seed-harvester/
 - [AutoHotkey v2](https://www.autohotkey.com/download/) (v2.0+, not v1.1)
 - [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) (add to PATH, or configure full path in script)
 - [Python 3.10+](https://www.python.org/downloads/) (for data processing)
-- [Tower Networking Inc](https://store.steampowered.com/app/2381090/Tower_Networking_Inc/) (Steam)
+- [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/) (Steam)
 
 ### Available Scripts
 
@@ -326,7 +326,7 @@ Or just share your `seed-log.csv` in the Discord and I'll merge it!
 
 - **Project Lead & Testing**: Salvo Praxis
 - **Development Assistance**: Claude (Anthropic) - AI pair programming partner
-- **Game**: [Tower Networking Inc](https://store.steampowered.com/app/2381090/Tower_Networking_Inc/) by [Pocosia Studios](https://pocosia.com/)
+- **Game**: [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/) by [Pocosia Studios](https://pocosia.com/)
 
 ---
 
