@@ -1,6 +1,6 @@
 # TNI Seed Harvester
 
-**Automated seed collection and proposal mapping for [Tower Networking Inc](https://store.steampowered.com/app/2381090/Tower_Networking_Inc/) by Pocosia Studios**
+**Automated seed collection and proposal mapping for [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/) by Pocosia Studios**
 
 [![Seeds](https://img.shields.io/badge/seeds-2%2C345-blue)](data/clean-collection-json/merged-seeds.json)
 [![Coverage](https://img.shields.io/badge/coverage-99.56%25-brightgreen)](data/clean-collection-json/merged-seeds.json)
