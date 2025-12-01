@@ -1,0 +1,455 @@
+{
+  "meta": {
+    "total_seeds": 46,
+    "unique_proposals": 15,
+    "version": "1.0",
+    "created": "2025-12-01T03:19:10.667103"
+  },
+  "proposals": {
+    "Cabler's Union (Base)": {
+      "description": "Support the Cabler's Union R&D institute",
+      "cost": 300,
+      "effect": "Unlocks more proposals for the Cabler's Union"
+    },
+    "Fusion Plant": {
+      "description": "Fusion Plant Funding (Phase 1) - Let's make a Sun",
+      "cost": 1000,
+      "effect": "Reduce all Data Center power cost by 20%"
+    },
+    "Lean Administration": {
+      "description": "Pain now for gain later",
+      "cost": 600,
+      "effect": "Permanently reduce daily admin expenses by 30%"
+    },
+    "Legal Retaliation": {
+      "description": "Another power outage? See you in court!",
+      "cost": null,
+      "effect": "Tenabolt pays 500 per outage/surge, items 10% more expensive, eliminates Tenabolt collaboration"
+    },
+    "Lobby against Tenabolt": {
+      "description": "Power to the people",
+      "cost": null,
+      "effect": "Tenabolt can't issue non-DC power fines, items 20% more expensive, eliminates Tenabolt collaboration"
+    },
+    "NetOps Research": {
+      "description": "Improvise, adapt, overcome",
+      "cost": 330,
+      "effect": "Unlocks 'cron', 'try', and 'notify' routines on NetShell"
+    },
+    "Overvoltage Directive": {
+      "description": "POWER OVERWHELMING!",
+      "cost": 200,
+      "effect": "-30% power outage chance, +30% power surge chance"
+    },
+    "PADU": {
+      "description": "PADU Development Funding - Everyone's favorite database",
+      "cost": 300,
+      "effect": "Unlocks padu_v3 program (stores text, image, audio, video)"
+    },
+    "Poems DB": {
+      "description": "A DB just for the text chads",
+      "cost": 200,
+      "effect": "Unlocks poems-db program (text-only storage, lightweight)"
+    },
+    "Power Management Research": {
+      "description": "Keep bills low and reliability high",
+      "cost": 225,
+      "effect": "Unlocks 'power' routine on NetShell"
+    },
+    "Refurbhut Investment": {
+      "description": "As long as it works...",
+      "cost": 555,
+      "effect": "Opens RefurbHut merchant (cheap refurbished devices, no warranty)"
+    },
+    "Remote Backups": {
+      "description": "3-2-1, let's back it up!",
+      "cost": 450,
+      "effect": "Unlocks 'sftp' routine (backup configs, remove malware)"
+    },
+    "Scanning Exploit": {
+      "description": "Scans too shall pass",
+      "cost": 1200,
+      "effect": "Netsh and autograph scans bypass all router rules (toggle on/off)"
+    },
+    "Second Monitor": {
+      "description": "Screen too small?",
+      "cost": 2500,
+      "effect": "Allows use of second monitor (right-alt)"
+    },
+    "Undervoltage Directive": {
+      "description": "Better dark than magic smoke",
+      "cost": 200,
+      "effect": "+30% power outage chance, -30% power surge chance"
+    }
+  },
+  "seeds": [
+    {
+      "seed": "9RQW8",
+      "proposals": [
+        "Fusion Plant",
+        "Cabler's Union (Base)",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "BZXGE",
+      "proposals": [
+        "Legal Retaliation",
+        "NetOps Research",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "I407J",
+      "proposals": [
+        "Fusion Plant",
+        "Lean Administration",
+        "Lobby against Tenabolt"
+      ]
+    },
+    {
+      "seed": "CEC5O",
+      "proposals": [
+        "Legal Retaliation",
+        "Cabler's Union (Base)",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "QGKVY",
+      "proposals": [
+        "Legal Retaliation",
+        "Fusion Plant",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "KZMX2",
+      "proposals": [
+        "PADU",
+        "NetOps Research",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "1Z99Z",
+      "proposals": [
+        "Refurbhut Investment",
+        "Fusion Plant",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "72WL2",
+      "proposals": [
+        "Lean Administration",
+        "Lobby against Tenabolt",
+        "Power Management Research"
+      ]
+    },
+    {
+      "seed": "LPNGN",
+      "proposals": [
+        "PADU",
+        "Overvoltage Directive",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "V22EZ",
+      "proposals": [
+        "Lobby against Tenabolt",
+        "Power Management Research",
+        "Cabler's Union (Base)"
+      ]
+    },
+    {
+      "seed": "UU6F2",
+      "proposals": [
+        "PADU",
+        "Overvoltage Directive",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "XVLSW",
+      "proposals": [
+        "Lean Administration",
+        "Lobby against Tenabolt",
+        "Power Management Research"
+      ]
+    },
+    {
+      "seed": "FI64M",
+      "proposals": [
+        "Lobby against Tenabolt",
+        "Refurbhut Investment",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "FG7PA",
+      "proposals": [
+        "PADU",
+        "Fusion Plant",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "I15LY",
+      "proposals": [
+        "Legal Retaliation",
+        "Overvoltage Directive",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "KZ9N0",
+      "proposals": [
+        "Legal Retaliation",
+        "Power Management Research",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "HXNDC",
+      "proposals": [
+        "Undervoltage Directive",
+        "Lean Administration",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "74QNN",
+      "proposals": [
+        "Fusion Plant",
+        "Power Management Research",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "AB9NX",
+      "proposals": [
+        "Fusion Plant",
+        "Lobby against Tenabolt",
+        "Cabler's Union (Base)"
+      ]
+    },
+    {
+      "seed": "L6P0G",
+      "proposals": [
+        "Fusion Plant",
+        "Lobby against Tenabolt",
+        "Cabler's Union (Base)"
+      ]
+    },
+    {
+      "seed": "BNTN9",
+      "proposals": [
+        "PADU",
+        "Scanning Exploit",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "ZDOA5",
+      "proposals": [
+        "Overvoltage Directive",
+        "Cabler's Union (Base)",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "IQGL8",
+      "proposals": [
+        "Undervoltage Directive",
+        "Lobby against Tenabolt",
+        "NetOps Research"
+      ]
+    },
+    {
+      "seed": "77244",
+      "proposals": [
+        "Undervoltage Directive",
+        "PADU",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "Z7NB4",
+      "proposals": [
+        "Refurbhut Investment",
+        "Cabler's Union (Base)",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "2EK6N",
+      "proposals": [
+        "PADU",
+        "Overvoltage Directive",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "9MEOY",
+      "proposals": [
+        "Fusion Plant",
+        "Second Monitor",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "EQWX3",
+      "proposals": [
+        "Lean Administration",
+        "Lobby against Tenabolt",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "JCX8K",
+      "proposals": [
+        "Undervoltage Directive",
+        "Refurbhut Investment",
+        "Fusion Plant"
+      ]
+    },
+    {
+      "seed": "E5I5F",
+      "proposals": [
+        "Refurbhut Investment",
+        "Second Monitor",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "BRL6Q",
+      "proposals": [
+        "Lean Administration",
+        "Lobby against Tenabolt",
+        "Overvoltage Directive"
+      ]
+    },
+    {
+      "seed": "479OR",
+      "proposals": [
+        "Refurbhut Investment",
+        "Fusion Plant",
+        "Overvoltage Directive"
+      ]
+    },
+    {
+      "seed": "TULWT",
+      "proposals": [
+        "Refurbhut Investment",
+        "Power Management Research",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "BGT9O",
+      "proposals": [
+        "Undervoltage Directive",
+        "NetOps Research",
+        "Power Management Research"
+      ]
+    },
+    {
+      "seed": "5136M",
+      "proposals": [
+        "Undervoltage Directive",
+        "Refurbhut Investment",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "YTZOE",
+      "proposals": [
+        "Undervoltage Directive",
+        "NetOps Research",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "YW77H",
+      "proposals": [
+        "Legal Retaliation",
+        "Undervoltage Directive",
+        "PADU"
+      ]
+    },
+    {
+      "seed": "DNLB7",
+      "proposals": [
+        "Refurbhut Investment",
+        "Overvoltage Directive",
+        "Remote Backups"
+      ]
+    },
+    {
+      "seed": "2G4RD",
+      "proposals": [
+        "NetOps Research",
+        "Power Management Research",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "ID8R5",
+      "proposals": [
+        "Power Management Research",
+        "Refurbhut Investment",
+        "Scanning Exploit"
+      ]
+    },
+    {
+      "seed": "2WCXN",
+      "proposals": [
+        "PADU",
+        "Lean Administration",
+        "Cabler's Union (Base)"
+      ]
+    },
+    {
+      "seed": "64PL0",
+      "proposals": [
+        "Refurbhut Investment",
+        "Cabler's Union (Base)",
+        "Poems DB"
+      ]
+    },
+    {
+      "seed": "SC1AJ",
+      "proposals": [
+        "Legal Retaliation",
+        "NetOps Research",
+        "Refurbhut Investment"
+      ]
+    },
+    {
+      "seed": "496NS",
+      "proposals": [
+        "Undervoltage Directive",
+        "PADU",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "285VH",
+      "proposals": [
+        "Legal Retaliation",
+        "Refurbhut Investment",
+        "Second Monitor"
+      ]
+    },
+    {
+      "seed": "IAEWZ",
+      "proposals": [
+        "Lobby against Tenabolt",
+        "Overvoltage Directive",
+        "Refurbhut Investment"
+      ]
+    }
+  ]
+}
