@@ -228,8 +228,6 @@ tni-seed-harvester/
 
 ## 🔧 Running the Harvester
 
-*Want to contribute to the hunt? Here's how to run your own harvests.*
-
 ### Requirements
 
 - Windows 10/11
