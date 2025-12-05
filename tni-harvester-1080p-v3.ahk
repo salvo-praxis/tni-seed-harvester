@@ -9,6 +9,8 @@
 ; RESOLUTION: 1920x1080 (fullscreen)
 ;   - Coordinates scaled from 1440p version (×0.75)
 ;   - For 1440p, use tni-harvester-1440p-v3.ahk instead
+;   - For other resolutions, update the coords section below
+;   - Use F12 to find correct coordinates for your setup
 ;
 ; FEATURES:
 ;   - Automated seed harvesting with OCR extraction
@@ -17,10 +19,6 @@
 ;   - First-run setup (Tutorials -> Scenarios tab click)
 ;   - Systematic seed mode (00000, 00001, ...) or random
 ;   - Configurable timing for different systems
-;
-; RESOLUTION: 2560x1440 (fullscreen)
-;   - For other resolutions, update the coords section below
-;   - Use F12 to find correct coordinates for your setup
 ;
 ; REQUIREMENTS:
 ;   - AutoHotkey v2.0+
@@ -31,7 +29,7 @@
 ; SETUP:
 ;   1. Update workDir below to match your installation path
 ;   2. Update gameExePath if your Steam library is elsewhere
-;   3. Run game in fullscreen at your target resolution
+;   3. Run game in fullscreen at 1920x1080
 ;   4. Use F12 to verify/update coordinates if needed
 ;
 ; HOTKEYS:
@@ -41,7 +39,7 @@
 ;   F12 = Coordinate helper (shows mouse position)
 ;
 ; AFTER HARVESTING:
-;   Run process-harvest.py (or double-click process-harvest.bat)
+;   Run process-harvest.bat (or: python process-harvest.py)
 ;   to clean, merge, and update the frontend.
 ; =============================================================================
 

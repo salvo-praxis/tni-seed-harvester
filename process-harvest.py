@@ -20,6 +20,8 @@ Usage:
     python process-harvest.py --dry-run # Preview changes without modifying files
     python process-harvest.py --stats   # Display current database statistics
 
+Or double-click process-harvest.bat
+
 Directory Structure:
     tni-seed-harvester/
     ├── output/                         # AHK harvester writes here (cleared after processing)
@@ -54,7 +56,6 @@ from collections import OrderedDict
 # =============================================================================
 
 # Base directory - automatically detected from script location
-# This allows the script to work regardless of where it's run from
 BASE_DIR = Path(__file__).parent.resolve()
 
 # Directory paths (relative to BASE_DIR)

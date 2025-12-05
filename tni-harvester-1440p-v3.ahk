@@ -37,7 +37,7 @@
 ;   F12 = Coordinate helper (shows mouse position)
 ;
 ; AFTER HARVESTING:
-;   Run process-harvest.py (or double-click process-harvest.bat)
+;   Run process-harvest.bat (or: python process-harvest.py)
 ;   to clean, merge, and update the frontend.
 ; =============================================================================
 

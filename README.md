@@ -41,7 +41,7 @@ The seed database is embedded directly in the HTML file, so it works completely 
 | Proposal Combinations | 453 / 455 (99.56%) |
 | Unique Proposals | 15 |
 
-**Progress:** ███████████████████░ **99.6%**
+**Progress:** `[███████████████████░]` **99.6%** — 2 combinations to go!
 
 ### The Last Two 🎯
 

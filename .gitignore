@@ -1,0 +1,22 @@
+# =============================================================================
+# TNI Seed Harvester - Git Ignore
+# =============================================================================
+# Internal tooling
+.tools/
+
+# IDE
+*.code-workspace
+.vscode/
+
+# Python cache
+__pycache__/
+
+# Harvester temp files
+output/*.csv
+output/*.png
+output/*.txt
+!output/.gitkeep
+
+# OS junk
+.DS_Store
+Thumbs.db
