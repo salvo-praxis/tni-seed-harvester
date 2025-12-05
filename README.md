@@ -2,7 +2,7 @@
 
 **Automated seed collection and proposal mapping for [Tower Networking Inc](https://store.steampowered.com/app/2939600/Tower_Networking_Inc/) by Pocosia Studios**
 
-[![Seeds](https://img.shields.io/badge/seeds-2%2C345-blue)](data/clean-collection-json/merged-seeds.json)
+[![Seeds](https://img.shields.io/badge/seeds-2%2C544-blue)](data/clean-collection-json/merged-seeds.json)
 [![Coverage](https://img.shields.io/badge/coverage-99.56%25-brightgreen)](data/clean-collection-json/merged-seeds.json)
 [![Combinations](https://img.shields.io/badge/combinations-453%2F455-yellow)](data/clean-collection-json/merged-seeds.json)
 
@@ -37,24 +37,26 @@ The seed database is embedded directly in the HTML file, so it works completely 
 
 | Metric | Value |
 |--------|-------|
-| Total Seeds | 2,345 |
+| Total Seeds | 2,544 |
 | Proposal Combinations | 453 / 455 (99.56%) |
 | Unique Proposals | 15 |
 
-### The Last Two
+**Progress:** ███████████████████░ **99.6%**
 
-After 2,345 seeds, these combinations remain elusive:
+### The Last Two 🎯
 
-- **Fusion Plant + Refurbhut Investment + Scanning Exploit**
-- **Scanning Exploit + Second Monitor + Undervoltage Directive**
+After 2,544 seeds, these combinations remain elusive:
 
-The hunt continues...
+- **Fusion Plant** + **Refurbhut Investment** + **Scanning Exploit** *(cost: 2,755)*
+- **Scanning Exploit** + **Second Monitor** + **Undervoltage Directive** *(cost: 3,900)*
+
+*So close! ...*
 
 ---
 
 ## 🔮 What We've Learned
 
-*After harvesting 2,345 seeds, patterns emerge from the chaos.*
+*After harvesting 2,544 seeds, patterns emerge from the chaos.*
 
 ### The Game's Hidden Hand
 
@@ -66,13 +68,13 @@ Each proposal has a "home" slot where it appears most often. Some are almost loc
 
 | Proposal | Slot 1 | Slot 2 | Slot 3 | Verdict |
 |----------|--------|--------|--------|---------|
-| Legal Retaliation | **92%** | 7% | 0% | *Almost always first* |
-| Poems DB | 0% | 7% | **93%** | *Almost always last* |
-| Second Monitor | 1% | 21% | **79%** | *Strongly prefers last* |
-| Undervoltage Directive | **73%** | 25% | 3% | *Strongly prefers first* |
-| Scanning Exploit | 3% | 32% | **66%** | *Usually last* |
-| Remote Backups | 18% | 15% | **67%** | *Usually last* |
-| PADU | **61%** | 34% | 5% | *Usually first* |
+| Poems DB | 0% | 6% | **94%** | *Almost always last* |
+| Legal Retaliation | **93%** | 7% | 0% | *Almost always first* |
+| Second Monitor | 1% | 22% | **77%** | *Strongly prefers last* |
+| Undervoltage Directive | **74%** | 23% | 3% | *Strongly prefers first* |
+| Remote Backups | 16% | 15% | **69%** | *Usually last* |
+| Scanning Exploit | 3% | 31% | **66%** | *Usually last* |
+| PADU | **62%** | 33% | 5% | *Usually first* |
 
 Other proposals (Fusion Plant, Lean Administration, Overvoltage, etc.) are more flexible, appearing across all three slots without strong preference.
 
@@ -82,13 +84,13 @@ Some pairs rarely appear together. The five rarest pairings:
 
 | Pair | Frequency | Notes |
 |------|-----------|-------|
-| Overvoltage + Undervoltage | 2.1% | *Contradictory policies* |
-| NetOps Research + PADU | 2.2% | |
-| Fusion Plant + Lobby against Tenabolt | 2.3% | |
-| Fusion Plant + Refurbhut Investment | 2.3% | *Both in missing combos* |
-| Second Monitor + Undervoltage | 2.4% | *Both in missing combos* |
+| Overvoltage + Undervoltage | 2.2% | *Contradictory policies* |
+| Fusion Plant + Lobby against Tenabolt | 2.2% |  |
+| Remote Backups + Undervoltage | 2.4% |  |
+| Fusion Plant + NetOps | 2.4% |  |
+| Scanning Exploit + Undervoltage | 2.4% | *In missing combo* |
 
-Notice how the rarest pairs involve proposals from our two missing combinations.
+Notice how the rarest pairs involve proposals from our missing combinations.
 
 #### Proposals That Stick Together
 
@@ -96,11 +98,11 @@ Meanwhile, these pairs appear together more often than expected:
 
 | Pair | Frequency |
 |------|-----------|
-| Fusion Plant + Power Management Research | 3.6% |
-| Overvoltage + Power Management Research | 3.6% |
-| Power Management Research + Scanning Exploit | 3.5% |
+| Overvoltage + Power Management | 3.6% |
+| Fusion Plant + Power Management | 3.5% |
+| Power Management + Scanning Exploit | 3.5% |
+| NetOps + Undervoltage | 3.5% |
 | Overvoltage + PADU | 3.5% |
-| Legal Retaliation + Poems DB | 3.5% |
 
 Power Management Research is the social butterfly of proposals.
 
@@ -108,24 +110,19 @@ Power Management Research is the social butterfly of proposals.
 
 ## 🦄 Unicorn Seeds
 
-These 15 combinations exist exactly once in our database. One-of-a-kind starts:
+These **10 combinations** exist exactly once in our database. One-of-a-kind starts:
 
 | Seed | Combination | Total Cost |
 |------|-------------|------------|
 | YQA59 | Lobby against Tenabolt + Overvoltage + Undervoltage | 400 |
-| K04S6 | Legal Retaliation + Poems DB + Power Management | 425 |
 | D6IVP | Lobby against Tenabolt + NetOps + Overvoltage | 530 |
-| WKK1U | PADU + Power Management + Undervoltage | 725 |
-| YVXLY | Lobby against Tenabolt + PADU + Remote Backups | 750 |
 | GWW1F | Lean Administration + Lobby against Tenabolt + Poems DB | 800 |
-| KXV83 | Cabler's Union + NetOps + Power Management | 855 |
 | OZMJW | Poems DB + Power Management + Refurbhut Investment | 980 |
 | C7UC1 | Lean Administration + NetOps + Remote Backups | 1380 |
 | 09YOS | Fusion Plant + Overvoltage + Poems DB | 1400 |
 | **JCX8K** | **Fusion Plant + Refurbhut Investment + Undervoltage** | 1755 |
 | GQVM2 | Cabler's Union + Poems DB + Second Monitor | 3000 |
 | S4RHH | PADU + Power Management + Second Monitor | 3025 |
-| 42VD2 | NetOps + Power Management + Second Monitor | 3055 |
 | LS0GT | Lean Administration + Poems DB + Second Monitor | 3300 |
 
 **JCX8K** is special — it was one of our "missing 3" combinations, discovered completely by accident during debugging. Sometimes the rarest finds come when you're not looking.
@@ -138,20 +135,20 @@ How likely is each proposal to appear in any given seed?
 
 | Proposal | Appears In | Draw Weight |
 |----------|------------|-------------|
-| Undervoltage Directive | 18.5% of seeds | 0.92x |
-| Second Monitor | 18.8% | 0.94x |
-| NetOps Research | 19.1% | 0.96x |
-| Refurbhut Investment | 19.4% | 0.97x |
-| Remote Backups | 19.4% | 0.97x |
-| Fusion Plant | 19.6% | 0.98x |
-| Lobby against Tenabolt | 19.8% | 0.99x |
-| Cabler's Union (Base) | 20.1% | 1.00x |
-| PADU | 20.1% | 1.01x |
-| Overvoltage Directive | 20.3% | 1.02x |
-| Scanning Exploit | 20.5% | 1.03x |
-| Lean Administration | 20.7% | 1.04x |
-| Legal Retaliation | 20.8% | 1.04x |
-| Poems DB | 21.1% | 1.06x |
+| Second Monitor | 18.7% of seeds | 0.94x |
+| Undervoltage Directive | 18.8% | 0.94x |
+| Refurbhut Investment | 19.2% | 0.96x |
+| Fusion Plant | 19.4% | 0.97x |
+| Remote Backups | 19.5% | 0.97x |
+| NetOps Research | 19.7% | 0.98x |
+| Lobby against Tenabolt | 19.9% | 0.99x |
+| Cabler's Union (Base) | 19.9% | 0.99x |
+| PADU | 20.0% | 1.00x |
+| Legal Retaliation | 20.4% | 1.02x |
+| Overvoltage Directive | 20.6% | 1.03x |
+| Lean Administration | 20.7% | 1.03x |
+| Scanning Exploit | 20.8% | 1.04x |
+| Poems DB | 20.9% | 1.04x |
 | Power Management Research | 21.7% | 1.08x |
 
 *Draw Weight: 1.00x = expected if perfectly uniform.*
@@ -160,26 +157,25 @@ How likely is each proposal to appear in any given seed?
 
 ---
 
-## 🎯 Why the Missing Two Are So Hard to Find
-
-Let's break down why these specific combinations might be impossible:
+## 🎯 Why the Missing Combinations Are Hard to Find
 
 ### Fusion Plant + Refurbhut Investment + Scanning Exploit
 
-- Fusion Plant + Refurbhut Investment appears in only **2.30%** of seeds
-- Total cost: **2,755** credits (very expensive start)
-- All three proposals are "investment" type — major upfront costs
+- Fusion Plant + Refurbhut Investment: **2.40%** of seeds
+- Fusion Plant + Scanning Exploit: **2.91%** of seeds
+- Refurbhut Investment + Scanning Exploit: **2.63%** of seeds
+- Total cost: **2,755** credits
 
 ### Scanning Exploit + Second Monitor + Undervoltage Directive
 
-- Second Monitor + Undervoltage Directive: **2.35%** of seeds
-- Scanning Exploit + Undervoltage Directive: **2.35%** of seeds  
-- Total cost: **3,900** credits (the most expensive possible start?)
-- Second Monitor and Scanning Exploit both strongly prefer Slot 3 — but only one can occupy it
+- Scanning Exploit + Second Monitor: **2.99%** of seeds
+- Scanning Exploit + Undervoltage Directive: **2.36%** of seeds
+- Second Monitor + Undervoltage Directive: **2.48%** of seeds
+- Total cost: **3,900** credits
+- ⚠️ **Slot conflict:** Scanning Exploit and Second Monitor both prefer Slot 3!
 
-That last point might be the key. If the algorithm assigns slots first, and both proposals "want" the same slot, the combination might be mechanically impossible.
+*These combinations involve the rarest pairs in the database. They may be mechanically impossible due to slot assignment rules, or just super rare.*
 
----
 
 ## 📋 All 15 Starting Proposals
 
