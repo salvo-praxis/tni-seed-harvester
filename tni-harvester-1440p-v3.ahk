@@ -1,5 +1,5 @@
 ; =============================================================================
-; TNI Seed Harvester v3.0
+; TNI Seed Harvester v3.0 
 ; =============================================================================
 ; Automates seed collection and proposal OCR for Tower Networking Inc
 ; 

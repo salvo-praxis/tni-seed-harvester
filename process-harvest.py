@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ================================================================================
-TNI Seed Harvester - Data Processing Pipeline
+TNI Seed Harvester - Data Processing Pipeline 
 ================================================================================
 
 This script processes harvested seed data through the complete pipeline:
