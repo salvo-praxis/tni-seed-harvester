@@ -1,5 +1,5 @@
 ; =============================================================================
-; TNI Seed Harvester v3.0 (1080p) 
+; TNI Seed Harvester v3.0 (1080p)
 ; =============================================================================
 ; Automates seed collection and proposal OCR for Tower Networking Inc
 ; 
