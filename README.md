@@ -49,7 +49,7 @@ The seed database is embedded directly in the HTML file, so it works completely 
 
 **All 455 possible combinations have been found!**
 
-This particular leg of the0 hunt is complete, but  here's always more data to gather!
+This particular leg of the hunt is complete, but there's always more data to gather!
 
 ---
 
