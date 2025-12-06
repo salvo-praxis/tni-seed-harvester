@@ -597,6 +597,10 @@ StartLoop() {
             CoordMode("Mouse", "Screen")
             Click(CONFIG.coords.startNewGame.x, CONFIG.coords.startNewGame.y)
             Sleep(CONFIG.clickDelay)
+            
+            ; Always click Scenarios tab (game may remember Tutorials tab from previous session)
+            Click(CONFIG.coords.scenariosTab.x, CONFIG.coords.scenariosTab.y)
+            Sleep(CONFIG.clickDelay)
         }
         
         ; === SEED HANDLING ===
