@@ -16,9 +16,10 @@ This script processes harvested seed data through the complete pipeline:
     8. Clears output/ directory for the next harvesting run
 
 Usage:
-    python process-harvest.py           # Process new harvest and update everything
-    python process-harvest.py --dry-run # Preview changes without modifying files
-    python process-harvest.py --stats   # Display current database statistics
+    python process-harvest.py                    # Process new harvest and update everything
+    python process-harvest.py --dry-run          # Preview changes without modifying files
+    python process-harvest.py --stats            # Display current database statistics
+    python process-harvest.py --regenerate-frontend  # Regenerate frontend with new styling
 
 Or double-click process-harvest.bat
 
@@ -193,6 +194,409 @@ FRONTEND_PROPOSALS_JS = '''        const PROPOSALS = {
             "Undervoltage Directive": { tagline: "Better dark than magic smoke", effect: "+30% power outage, -30% power surge chance", cost: 200 }
         };
         
+'''
+
+# Complete HTML template for generating the frontend from scratch
+# Uses modern NOC-style dark theme with green/blue accents
+FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNI Seed Finder</title> 
+    <style>
+        * {{ box-sizing: border-box; }}
+        
+        body {{
+            font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+            background: linear-gradient(135deg, #0a0e14 0%, #1a1f2e 50%, #0d1117 100%);
+            color: #c9d1d9;
+            margin: 0;
+            padding: 24px;
+            min-height: 100vh;
+        }}
+        
+        .container {{ max-width: 1200px; margin: 0 auto; }}
+        
+        .header {{
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }}
+        
+        h1 {{
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }}
+        
+        h1 span {{ color: #58a6ff; }}
+        
+        .subtitle {{ color: #8b949e; margin: 0; font-size: 12px; }}
+        .stats {{ color: #7d8590; font-size: 11px; margin-top: 8px; }}
+        
+        .panel {{
+            background: rgba(22,27,34,0.8);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #30363d;
+        }}
+        
+        .panel h2 {{
+            margin-top: 0;
+            color: #58a6ff;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 12px;
+        }}
+        
+        .proposals-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+        }}
+        
+        .proposal-card {{
+            background: rgba(22,27,34,0.8);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }}
+        
+        .proposal-card:hover {{
+            border-color: #58a6ff;
+            background: rgba(88,166,255,0.08);
+        }}
+        
+        .proposal-card.selected {{
+            border-color: #00ff88;
+            background: rgba(0,255,136,0.1);
+        }}
+        
+        .proposal-card.disabled {{ opacity: 0.4; cursor: not-allowed; }}
+        .proposal-name {{ font-weight: 500; color: #c9d1d9; margin-bottom: 4px; font-size: 12px; }}
+        .proposal-tagline {{ font-style: italic; color: #8b949e; font-size: 10px; margin-bottom: 6px; }}
+        .proposal-effect {{ font-size: 10px; color: #58a6ff; }}
+        .proposal-cost {{ font-size: 10px; color: #f0883e; margin-top: 4px; }}
+        
+        .selection-summary {{
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }}
+        
+        .selected-tag {{
+            background: rgba(0,255,136,0.15);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        
+        .selected-tag .remove {{ cursor: pointer; opacity: 0.7; }}
+        .selected-tag .remove:hover {{ opacity: 1; }}
+        
+        .clear-btn {{
+            background: rgba(248,81,73,0.15);
+            border: 1px solid #f85149;
+            color: #f85149;
+            padding: 6px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+        }}
+        .clear-btn:hover {{ background: rgba(248,81,73,0.25); }}
+        
+        .results-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }}
+        
+        .results-count {{ color: #00ff88; font-weight: 600; font-size: 12px; }}
+        
+        .seed-results {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+        }}
+        
+        .seed-card {{
+            background: rgba(22,27,34,0.8);
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid #30363d;
+        }}
+        
+        .seed-code {{
+            font-family: inherit;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #00ff88;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0,255,136,0.08);
+            border: 1px solid #238636;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }}
+        
+        .seed-code:hover {{ background: rgba(0,255,136,0.15); }}
+        .seed-code.copied {{ background: rgba(35,134,54,0.3); border-color: #238636; }}
+        
+        .seed-proposals {{ display: flex; flex-direction: column; gap: 8px; }}
+        
+        .seed-proposal {{
+            background: rgba(22,27,34,0.6);
+            padding: 8px 10px;
+            border-radius: 4px;
+            border-left: 3px solid #58a6ff;
+        }}
+        
+        .seed-proposal.matched {{
+            border-left-color: #00ff88;
+            background: rgba(0,255,136,0.08);
+        }}
+        
+        .seed-proposal-name {{ font-weight: 500; color: #c9d1d9; font-size: 11px; }}
+        .seed-proposal-effect {{ font-size: 10px; color: #8b949e; margin-top: 2px; }}
+        .no-results {{ text-align: center; color: #8b949e; padding: 40px; font-size: 12px; }}
+        
+        .search-box {{ margin-bottom: 15px; }}
+        .search-box input {{
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: rgba(22,27,34,0.8);
+            color: #c9d1d9;
+            font-size: 12px;
+            font-family: inherit;
+        }}
+        .search-box input:focus {{ outline: none; border-color: #58a6ff; }}
+        .search-box input::placeholder {{ color: #8b949e; }}
+
+        .tooltip {{
+            position: fixed;
+            background: #238636;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 1000;
+        }}
+        .tooltip.show {{ opacity: 1; }}
+        
+        .site-footer {{
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid #30363d;
+            text-align: center;
+            font-size: 11px;
+            color: #7d8590;
+        }}
+        
+        .site-footer a {{
+            color: #8b949e;
+            text-decoration: none;
+            transition: color 0.15s;
+        }}
+        
+        .site-footer a:hover {{ color: #58a6ff; }}
+        
+        .site-footer .sep {{
+            margin: 0 8px;
+            color: #30363d;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TNI <span>SEED FINDER</span></h1>
+            <p class="subtitle">Find seeds by selecting desired proposals</p>
+            <p class="stats">Database: <span id="seedCount">0</span> verified seeds</p>
+        </div>
+        
+        <div class="panel">
+            <h2>📋 Select Proposals (up to 3)</h2>
+            <div class="search-box">
+                <input type="text" id="proposalSearch" placeholder="Filter proposals...">
+            </div>
+            <div class="selection-summary" id="selectionSummary"></div>
+            <div class="proposals-grid" id="proposalsGrid"></div>
+        </div>
+        
+        <div class="panel">
+            <h2>🎯 Matching Seeds</h2>
+            <div class="results-header">
+                <span class="results-count" id="resultsCount">Select proposals above to find seeds</span>
+            </div>
+            <div id="seedResults" class="seed-results">
+                <div class="no-results">👆 Click on proposals above to find matching seeds</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip">Copied!</div>
+
+    <script>
+{proposals_js}{seed_db_js}
+        let selectedProposals = [];
+
+        function init() {{
+            document.getElementById('seedCount').textContent = SEED_DB.seeds.length;
+            renderProposals();
+            updateResults();
+        }}
+
+        function renderProposals() {{
+            const grid = document.getElementById('proposalsGrid');
+            const searchTerm = document.getElementById('proposalSearch').value.toLowerCase();
+            grid.innerHTML = '';
+            
+            for (const [name, info] of Object.entries(PROPOSALS)) {{
+                if (searchTerm && !name.toLowerCase().includes(searchTerm) && !info.effect.toLowerCase().includes(searchTerm)) continue;
+                
+                const card = document.createElement('div');
+                card.className = 'proposal-card';
+                if (selectedProposals.includes(name)) card.classList.add('selected');
+                else if (selectedProposals.length >= 3) card.classList.add('disabled');
+                
+                card.innerHTML = `
+                    <div class="proposal-name">${{name}}</div>
+                    <div class="proposal-tagline">"${{info.tagline}}"</div>
+                    <div class="proposal-effect">${{info.effect}}</div>
+                    ${{info.cost ? `<div class="proposal-cost">💰 Cost: ${{info.cost}}</div>` : `<div class="proposal-cost">📜 Policy change</div>`}}
+                `;
+                card.onclick = () => toggleProposal(name);
+                grid.appendChild(card);
+            }}
+        }}
+
+        function toggleProposal(name) {{
+            const idx = selectedProposals.indexOf(name);
+            if (idx >= 0) selectedProposals.splice(idx, 1);
+            else if (selectedProposals.length < 3) selectedProposals.push(name);
+            renderProposals();
+            renderSelectionSummary();
+            updateResults();
+        }}
+
+        function renderSelectionSummary() {{
+            const summary = document.getElementById('selectionSummary');
+            if (selectedProposals.length === 0) {{
+                summary.innerHTML = '<span style="color: #8b949e">No proposals selected</span>';
+                return;
+            }}
+            let html = selectedProposals.map(name => `
+                <span class="selected-tag">${{name}}<span class="remove" onclick="event.stopPropagation(); toggleProposal('${{name.replace(/'/g, "\\\\'")}}')">\u2715</span></span>
+            `).join('');
+            html += `<button class="clear-btn" onclick="clearSelection()">Clear All</button>`;
+            summary.innerHTML = html;
+        }}
+
+        function clearSelection() {{
+            selectedProposals = [];
+            renderProposals();
+            renderSelectionSummary();
+            updateResults();
+        }}
+
+        function updateResults() {{
+            const resultsDiv = document.getElementById('seedResults');
+            const countDiv = document.getElementById('resultsCount');
+            
+            if (selectedProposals.length === 0) {{
+                resultsDiv.innerHTML = '<div class="no-results">👆 Click on proposals above to find matching seeds</div>';
+                countDiv.textContent = 'Select proposals above to find seeds';
+                return;
+            }}
+            
+            const matches = SEED_DB.seeds.filter(entry => 
+                selectedProposals.every(p => entry.p.includes(p))
+            );
+            
+            if (matches.length === 0) {{
+                resultsDiv.innerHTML = `<div class="no-results">😔 No seeds found with all selected proposals<br><small>Try selecting fewer proposals or different combinations</small></div>`;
+                countDiv.textContent = '0 seeds found';
+                return;
+            }}
+            
+            countDiv.textContent = `${{matches.length}} seed${{matches.length > 1 ? 's' : ''}} found`;
+            
+            resultsDiv.innerHTML = matches.slice(0, 50).map(entry => {{
+                return `
+                    <div class="seed-card">
+                        <div class="seed-code" onclick="copySeed('${{entry.s}}', this)" title="Click to copy">${{entry.s}}</div>
+                        <div class="seed-proposals">
+                            ${{entry.p.map(p => {{
+                                const info = PROPOSALS[p];
+                                const isMatched = selectedProposals.includes(p);
+                                return `<div class="seed-proposal ${{isMatched ? 'matched' : ''}}">
+                                    <div class="seed-proposal-name">${{p}}</div>
+                                    <div class="seed-proposal-effect">${{info ? info.effect : 'Unknown'}}</div>
+                                </div>`;
+                            }}).join('')}}
+                        </div>
+                    </div>
+                `;
+            }}).join('') + (matches.length > 50 ? `<div class="no-results">...and ${{matches.length - 50}} more</div>` : '');
+        }}
+
+        function copySeed(seed, element) {{
+            navigator.clipboard.writeText(seed).then(() => {{
+                element.classList.add('copied');
+                const tooltip = document.getElementById('tooltip');
+                const rect = element.getBoundingClientRect();
+                tooltip.style.left = rect.left + rect.width/2 - 40 + 'px';
+                tooltip.style.top = rect.top - 40 + 'px';
+                tooltip.classList.add('show');
+                setTimeout(() => {{
+                    element.classList.remove('copied');
+                    tooltip.classList.remove('show');
+                }}, 1500);
+            }});
+        }}
+
+        document.getElementById('proposalSearch').addEventListener('input', renderProposals);
+        init();
+    </script>
+    
+    <div class="site-footer">
+        <a href="https://github.com/salvo-praxis/tni-toolkit" target="_blank">TNI Toolkit</a>
+        <span class="sep">|</span>
+        <a href="https://store.steampowered.com/app/2939600/Tower_Networking_Inc/" target="_blank">Tower Networking Inc. on Steam</a>
+    </div>
+</body>
+</html>
 '''
 
 
@@ -550,8 +954,8 @@ def update_frontend(seed_map):
     """
     Update the frontend HTML with current seed data.
     
-    The frontend is a standalone HTML file with embedded JavaScript data.
-    This function locates the data section and replaces it with current data.
+    If the frontend file doesn't exist, it will be generated from the template.
+    If it exists, the data section will be updated in place.
     
     The compact format uses 's' for seed and 'p' for proposals to minimize
     file size since the data is embedded in HTML.
@@ -562,9 +966,26 @@ def update_frontend(seed_map):
     Returns:
         bool: True if update succeeded, False otherwise
     """
+    # Build compact SEED_DB for minimal file size
+    compact_seeds = [{'s': s, 'p': p} for s, p in sorted(seed_map.items())]
+    seed_db = {
+        'version': datetime.now().strftime("%Y%m%d"),
+        'count': len(compact_seeds),
+        'seeds': compact_seeds
+    }
+    seed_db_json = json.dumps(seed_db, separators=(',', ':'))  # Compact JSON
+    seed_db_line = f"        const SEED_DB = {seed_db_json};\n"
+    
+    # If frontend doesn't exist, generate from template
     if not FRONTEND_HTML.exists():
-        print(f"  Warning: Frontend not found at {FRONTEND_HTML}")
-        return False
+        print(f"  Generating new frontend from template...")
+        html = FRONTEND_HTML_TEMPLATE.format(
+            proposals_js=FRONTEND_PROPOSALS_JS,
+            seed_db_js=seed_db_line
+        )
+        with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
+            f.write(html)
+        return True
     
     # Read existing frontend HTML
     with open(FRONTEND_HTML, 'r', encoding='utf-8') as f:
@@ -588,22 +1009,22 @@ def update_frontend(seed_map):
     
     if proposals_start is None or seed_db_start is None:
         print("  Warning: Could not find data markers in frontend HTML")
-        return False
+        print("  Regenerating frontend from template...")
+        html = FRONTEND_HTML_TEMPLATE.format(
+            proposals_js=FRONTEND_PROPOSALS_JS,
+            seed_db_js=seed_db_line
+        )
+        with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
+            f.write(html)
+        return True
     
-    # Build compact SEED_DB for minimal file size
-    compact_seeds = [{'s': s, 'p': p} for s, p in sorted(seed_map.items())]
-    seed_db = {
-        'version': datetime.now().strftime("%Y%m%d"),
-        'count': len(compact_seeds),
-        'seeds': compact_seeds
-    }
-    seed_db_json = json.dumps(seed_db, separators=(',', ':'))  # Compact JSON
-    seed_db_line = f"        const SEED_DB = {seed_db_json};"
+    # Build the data section line (no trailing newline - joining adds it)
+    seed_db_line_no_newline = f"        const SEED_DB = {seed_db_json};"
     
     # Rebuild HTML with new data
     new_lines = (
         lines[:proposals_start] +
-        [FRONTEND_PROPOSALS_JS + seed_db_line] +
+        [FRONTEND_PROPOSALS_JS + seed_db_line_no_newline] +
         lines[seed_db_end:]
     )
     
@@ -611,6 +1032,40 @@ def update_frontend(seed_map):
     
     with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
         f.write(new_html)
+    
+    return True
+
+
+def regenerate_frontend(seed_map):
+    """
+    Force regenerate the frontend HTML from template.
+    
+    This replaces the entire frontend file with a fresh copy from the template,
+    useful when the styling has been updated.
+    
+    Args:
+        seed_map: Dict mapping seed codes to proposal lists
+        
+    Returns:
+        bool: True if regeneration succeeded
+    """
+    # Build compact SEED_DB for minimal file size
+    compact_seeds = [{'s': s, 'p': p} for s, p in sorted(seed_map.items())]
+    seed_db = {
+        'version': datetime.now().strftime("%Y%m%d"),
+        'count': len(compact_seeds),
+        'seeds': compact_seeds
+    }
+    seed_db_json = json.dumps(seed_db, separators=(',', ':'))
+    seed_db_line = f"        const SEED_DB = {seed_db_json};\n"
+    
+    html = FRONTEND_HTML_TEMPLATE.format(
+        proposals_js=FRONTEND_PROPOSALS_JS,
+        seed_db_js=seed_db_line
+    )
+    
+    with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
+        f.write(html)
     
     return True
 
@@ -848,6 +1303,17 @@ if __name__ == "__main__":
         show_stats()
     elif '--dry-run' in sys.argv:
         run_pipeline(dry_run=True)
+    elif '--regenerate-frontend' in sys.argv:
+        # Force regenerate frontend from template with current database
+        print("\n" + "=" * 60)
+        print("REGENERATING FRONTEND FROM TEMPLATE")
+        print("=" * 60)
+        data = load_merged_database()
+        seed_map = {e['seed']: e['proposals'] for e in data.get('seeds', [])}
+        if regenerate_frontend(seed_map):
+            print(f"  Regenerated: {FRONTEND_HTML.name}")
+            print(f"  Seeds embedded: {len(seed_map)}")
+        print()
     elif '--help' in sys.argv or '-h' in sys.argv:
         print(__doc__)
     else:
