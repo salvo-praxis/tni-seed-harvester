@@ -8,40 +8,57 @@
         * { box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #eee;
+            font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+            background: linear-gradient(135deg, #0a0e14 0%, #1a1f2e 50%, #0d1117 100%);
+            color: #c9d1d9;
             margin: 0;
-            padding: 20px;
+            padding: 24px;
             min-height: 100vh;
         }
         
         .container { max-width: 1200px; margin: 0 auto; }
         
-        h1 {
+        .header {
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
             text-align: center;
-            color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-            margin-bottom: 10px;
         }
         
-        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
-        .stats { text-align: center; color: #666; font-size: 0.9em; margin-bottom: 20px; }
+        h1 {
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        h1 span {
+            color: #58a6ff;
+        }
+        
+        .subtitle { color: #8b949e; margin: 0; font-size: 12px; }
+        .stats { color: #7d8590; font-size: 11px; margin-top: 8px; }
         
         .panel {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: rgba(22,27,34,0.8);
+            border-radius: 6px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #30363d;
         }
         
         .panel h2 {
             margin-top: 0;
-            color: #00d4ff;
-            font-size: 1.2em;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
+            color: #58a6ff;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 12px;
         }
         
         .proposals-grid {
@@ -51,30 +68,29 @@
         }
         
         .proposal-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            background: rgba(22,27,34,0.8);
+            border: 1px solid #30363d;
+            border-radius: 6px;
             padding: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s;
         }
         
         .proposal-card:hover {
-            border-color: rgba(0, 212, 255, 0.5);
-            background: rgba(0, 212, 255, 0.1);
+            border-color: #58a6ff;
+            background: rgba(88,166,255,0.08);
         }
         
         .proposal-card.selected {
-            border-color: #00d4ff;
-            background: rgba(0, 212, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            border-color: #00ff88;
+            background: rgba(0,255,136,0.1);
         }
         
         .proposal-card.disabled { opacity: 0.4; cursor: not-allowed; }
-        .proposal-name { font-weight: bold; color: #fff; margin-bottom: 4px; }
-        .proposal-tagline { font-style: italic; color: #aaa; font-size: 0.85em; margin-bottom: 6px; }
-        .proposal-effect { font-size: 0.85em; color: #7fdbff; }
-        .proposal-cost { font-size: 0.8em; color: #ffdc00; margin-top: 4px; }
+        .proposal-name { font-weight: 500; color: #c9d1d9; margin-bottom: 4px; font-size: 12px; }
+        .proposal-tagline { font-style: italic; color: #8b949e; font-size: 10px; margin-bottom: 6px; }
+        .proposal-effect { font-size: 10px; color: #58a6ff; }
+        .proposal-cost { font-size: 10px; color: #f0883e; margin-top: 4px; }
         
         .selection-summary {
             display: flex;
@@ -85,11 +101,13 @@
         }
         
         .selected-tag {
-            background: #00d4ff;
-            color: #000;
+            background: rgba(0,255,136,0.15);
+            border: 1px solid #00ff88;
+            color: #00ff88;
             padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 11px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -99,15 +117,16 @@
         .selected-tag .remove:hover { opacity: 1; }
         
         .clear-btn {
-            background: #ff4136;
-            color: white;
-            border: none;
+            background: rgba(248,81,73,0.15);
+            border: 1px solid #f85149;
+            color: #f85149;
             padding: 6px 15px;
-            border-radius: 20px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 11px;
+            font-family: inherit;
         }
-        .clear-btn:hover { background: #ff6b5f; }
+        .clear-btn:hover { background: rgba(248,81,73,0.25); }
         
         .results-header {
             display: flex;
@@ -116,7 +135,7 @@
             margin-bottom: 15px;
         }
         
-        .results-count { color: #00d4ff; font-weight: bold; }
+        .results-count { color: #00ff88; font-weight: 600; font-size: 12px; }
         
         .seed-results {
             display: grid;
@@ -125,81 +144,110 @@
         }
         
         .seed-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
+            background: rgba(22,27,34,0.8);
+            border-radius: 6px;
             padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #30363d;
         }
         
         .seed-code {
-            font-family: 'Courier New', monospace;
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #00d4ff;
+            font-family: inherit;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #00ff88;
             text-align: center;
             padding: 10px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 6px;
+            background: rgba(0,255,136,0.08);
+            border: 1px solid #238636;
+            border-radius: 4px;
             margin-bottom: 12px;
             letter-spacing: 4px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.15s;
         }
         
-        .seed-code:hover { background: rgba(0, 212, 255, 0.2); }
-        .seed-code.copied { background: rgba(46, 204, 113, 0.3); }
+        .seed-code:hover { background: rgba(0,255,136,0.15); }
+        .seed-code.copied { background: rgba(35,134,54,0.3); border-color: #238636; }
         
         .seed-proposals { display: flex; flex-direction: column; gap: 8px; }
         
         .seed-proposal {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(22,27,34,0.6);
             padding: 8px 10px;
-            border-radius: 6px;
-            border-left: 3px solid #00d4ff;
+            border-radius: 4px;
+            border-left: 3px solid #58a6ff;
         }
         
         .seed-proposal.matched {
-            border-left-color: #2ecc40;
-            background: rgba(46, 204, 64, 0.1);
+            border-left-color: #00ff88;
+            background: rgba(0,255,136,0.08);
         }
         
-        .seed-proposal-name { font-weight: bold; color: #fff; font-size: 0.95em; }
-        .seed-proposal-effect { font-size: 0.8em; color: #999; margin-top: 2px; }
-        .no-results { text-align: center; color: #666; padding: 40px; font-size: 1.1em; }
+        .seed-proposal-name { font-weight: 500; color: #c9d1d9; font-size: 11px; }
+        .seed-proposal-effect { font-size: 10px; color: #8b949e; margin-top: 2px; }
+        .no-results { text-align: center; color: #8b949e; padding: 40px; font-size: 12px; }
         
         .search-box { margin-bottom: 15px; }
         .search-box input {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            font-size: 1em;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: rgba(22,27,34,0.8);
+            color: #c9d1d9;
+            font-size: 12px;
+            font-family: inherit;
         }
-        .search-box input:focus { outline: none; border-color: #00d4ff; }
-        .search-box input::placeholder { color: #666; }
+        .search-box input:focus { outline: none; border-color: #58a6ff; }
+        .search-box input::placeholder { color: #8b949e; }
 
         .tooltip {
             position: fixed;
-            background: #2ecc40;
-            color: #000;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-weight: bold;
+            background: #238636;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 11px;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.15s;
             z-index: 1000;
         }
         .tooltip.show { opacity: 1; }
+        
+        .site-footer {
+            margin-top: 40px;
+            padding-top: 16px;
+            border-top: 1px solid #30363d;
+            text-align: center;
+            font-size: 11px;
+            color: #7d8590;
+        }
+        
+        .site-footer a {
+            color: #8b949e;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        
+        .site-footer a:hover {
+            color: #58a6ff;
+        }
+        
+        .site-footer .sep {
+            margin: 0 8px;
+            color: #30363d;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌐 TNI Seed Finder</h1>
-        <p class="subtitle">Find seeds by selecting desired proposals</p>
-        <p class="stats">Database: <span id="seedCount">0</span> verified seeds</p>
+        <div class="header">
+            <h1>TNI <span>SEED FINDER</span></h1>
+            <p class="subtitle">Find seeds by selecting desired proposals</p>
+            <p class="stats">Database: <span id="seedCount">0</span> verified seeds</p>
+        </div>
         
         <div class="panel">
             <h2>📋 Select Proposals (up to 3)</h2>
@@ -287,7 +335,7 @@
         function renderSelectionSummary() {
             const summary = document.getElementById('selectionSummary');
             if (selectedProposals.length === 0) {
-                summary.innerHTML = '<span style="color: #666">No proposals selected</span>';
+                summary.innerHTML = '<span style="color: #8b949e">No proposals selected</span>';
                 return;
             }
             let html = selectedProposals.map(name => `
@@ -364,5 +412,11 @@
         document.getElementById('proposalSearch').addEventListener('input', renderProposals);
         init();
     </script>
+    
+    <div class="site-footer">
+        <a href="https://github.com/salvo-praxis/tni-toolkit" target="_blank">TNI Toolkit</a>
+        <span class="sep">|</span>
+        <a href="https://store.steampowered.com/app/2939600/Tower_Networking_Inc/" target="_blank">Tower Networking Inc. on Steam</a>
+    </div>
 </body>
 </html>
