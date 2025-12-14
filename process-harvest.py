@@ -198,14 +198,59 @@ FRONTEND_PROPOSALS_JS = '''        const PROPOSALS = {
 
 # Complete HTML template for generating the frontend from scratch
 # Uses modern NOC-style dark theme with green/blue accents
-FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
+FRONTEND_HTML_TEMPLATE = '''<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  TNI Starting Proposal Seed Finder                                           ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  Version: 1.2.0                                                              ║
+║  Updated: {generation_date}                                                  ║
+║  Part of: TNI Toolkit (https://github.com/salvo-praxis/tni-toolkit)          ║
+║  Source:  TNI Seed Harvester (https://github.com/salvo-praxis/tni-seed-harvester)
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  Description:                                                                ║
+║    Search a database of verified seeds by selecting up to 3 starting         ║
+║    proposals. Find the perfect seed for your preferred playstyle.            ║
+║                                                                              ║
+║  Features:                                                                   ║
+║    - 455 possible starting proposal combinations                             ║
+║    - 100% coverage of all combinations achieved                              ║
+║    - Filter by proposal name, search by seed                                 ║
+║    - Shows total starting cost for each seed                                 ║
+║    - Configurable results per page with pagination                           ║
+║                                                                              ║
+║  Data Pipeline:                                                              ║
+║    AutoHotkey v2 automation → Tesseract OCR → Python processing → HTML       ║
+║                                                                              ║
+║  Contributors:                                                               ║
+║    - Salvo Praxis (automation pipeline, data collection)                     ║
+║    - Claude (Anthropic)                                                      ║
+║                                                                              ║
+║  Changelog:                                                                  ║
+║    1.2.0 - Added config menu, pagination, results per page stepper           ║
+║    1.1.0 - Renamed "Starting Proposal Seed Finder", header/footer, back link ║
+║    1.0.0 - Initial release with 3,794 seeds, 455 combinations                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNI Seed Finder</title> 
+    <title>TNI Starting Proposal Seed Finder</title> 
     <style>
         * {{ box-sizing: border-box; }}
+        
+        /* Custom Scrollbars */
+        * {{
+            scrollbar-width: thin;
+            scrollbar-color: #30363d #0d1117;
+        }}
+        
+        ::-webkit-scrollbar {{ width: 8px; height: 8px; }}
+        ::-webkit-scrollbar-track {{ background: #0d1117; border-radius: 4px; }}
+        ::-webkit-scrollbar-thumb {{ background: #30363d; border-radius: 4px; border: 1px solid #0d1117; }}
+        ::-webkit-scrollbar-thumb:hover {{ background: #58a6ff; }}
+        ::-webkit-scrollbar-corner {{ background: #0d1117; }}
         
         body {{
             font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
@@ -214,15 +259,36 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
             margin: 0;
             padding: 24px;
             min-height: 100vh;
+            line-height: 1.6;
         }}
         
         .container {{ max-width: 1200px; margin: 0 auto; }}
         
+        /* Back to Toolkit button */
+        .back-link {{
+            display: none;
+            margin-top: 16px;
+            color: #58a6ff;
+            text-decoration: none;
+            font-size: 11px;
+            padding: 6px 12px;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }}
+        .back-link:hover {{
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.1);
+        }}
+        .back-link.visible {{
+            display: inline-block;
+        }}
+        
         .header {{
-            border-bottom: 1px solid #30363d;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
             text-align: center;
+            padding: 40px 0 30px;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 30px;
         }}
         
         h1 {{
@@ -331,6 +397,8 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }}
         
         .results-count {{ color: #00ff88; font-weight: 600; font-size: 12px; }}
@@ -414,6 +482,207 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
         }}
         .tooltip.show {{ opacity: 1; }}
         
+        /* Config Bar */
+        .config-bar {{
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+            position: relative;
+        }}
+        
+        .config-btn {{
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #8b949e;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }}
+        
+        .config-btn:hover {{
+            border-color: #58a6ff;
+            color: #c9d1d9;
+        }}
+        
+        .config-btn.active {{
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+        }}
+        
+        .config-btn svg {{
+            width: 14px;
+            height: 14px;
+        }}
+        
+        .config-panel {{
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(22, 27, 34, 0.95);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+            min-width: 280px;
+            z-index: 100;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: none;
+        }}
+        
+        .config-panel.show {{ display: block; }}
+        
+        .config-panel h3 {{
+            color: #58a6ff;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #30363d;
+        }}
+        
+        .config-option {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            min-height: 36px;
+        }}
+        
+        .config-option-label {{
+            color: #c9d1d9;
+            font-size: 12px;
+        }}
+        
+        .config-option-desc {{
+            color: #8b949e;
+            font-size: 10px;
+            margin-top: 2px;
+        }}
+        
+        .stepper {{
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+        }}
+        
+        .stepper button {{
+            width: 28px;
+            height: 26px;
+            border: none;
+            background: linear-gradient(180deg, #2d333b 0%, #22272e 100%);
+            color: #58a6ff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        
+        .stepper button:hover:not(:disabled) {{
+            background: linear-gradient(180deg, #3d444d 0%, #2d333b 100%);
+            color: #00ff88;
+        }}
+        
+        .stepper button:active:not(:disabled) {{
+            background: linear-gradient(180deg, #22272e 0%, #2d333b 100%);
+        }}
+        
+        .stepper button:disabled {{
+            color: #484f58;
+            cursor: not-allowed;
+            background: #21262d;
+        }}
+        
+        .stepper button:first-child {{
+            border-right: 1px solid #30363d;
+        }}
+        
+        .stepper button:last-child {{
+            border-left: 1px solid #30363d;
+        }}
+        
+        .stepper-value {{
+            min-width: 40px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #00ff88;
+            padding: 0 6px;
+            background: rgba(0, 255, 136, 0.05);
+            border: none;
+            outline: none;
+            height: 26px;
+        }}
+        
+        .stepper-value::-webkit-outer-spin-button,
+        .stepper-value::-webkit-inner-spin-button {{
+            -webkit-appearance: none;
+            margin: 0;
+        }}
+        
+        .stepper-value[type=number] {{
+            -moz-appearance: textfield;
+        }}
+        
+        /* Pagination */
+        .pagination {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }}
+        
+        .page-btn {{
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: inherit;
+            transition: all 0.15s;
+        }}
+        
+        .page-btn:hover:not(:disabled) {{
+            border-color: #58a6ff;
+            color: #58a6ff;
+        }}
+        
+        .page-btn:disabled {{
+            opacity: 0.3;
+            cursor: not-allowed;
+        }}
+        
+        .page-btn.active {{
+            background: rgba(0, 255, 136, 0.15);
+            border-color: #00ff88;
+            color: #00ff88;
+        }}
+        
+        .page-info {{
+            color: #8b949e;
+            font-size: 11px;
+            padding: 0 8px;
+        }}
+        
+        /* Footer */
         .site-footer {{
             margin-top: 40px;
             padding-top: 16px;
@@ -429,20 +698,84 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
             transition: color 0.15s;
         }}
         
-        .site-footer a:hover {{ color: #58a6ff; }}
+        .site-footer a:hover {{
+            color: #58a6ff;
+        }}
         
         .site-footer .sep {{
             margin: 0 8px;
             color: #30363d;
+        }}
+        
+        .site-footer .footer-note {{
+            margin: 12px 0;
+            color: #7d8590;
+        }}
+        
+        .site-footer .footer-badges {{
+            margin-top: 12px;
+        }}
+        
+        .site-footer .version-badge {{
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 8px;
+        }}
+        
+        .site-footer .license-badge {{
+            display: inline-block;
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            text-decoration: none;
+            transition: all 0.15s;
+        }}
+        
+        .site-footer .license-badge:hover {{
+            border-color: #58a6ff;
+            color: #58a6ff;
         }}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>TNI <span>SEED FINDER</span></h1>
-            <p class="subtitle">Find seeds by selecting desired proposals</p>
-            <p class="stats">Database: <span id="seedCount">0</span> verified seeds</p>
+            <h1><span>TNI</span> STARTING PROPOSAL SEED FINDER</h1>
+            <p class="subtitle">Select Proposals • 455 Combinations • <span id="seedCount">0</span> Seeds</p>
+            <a href="../index.html" class="back-link" id="back-to-toolkit">← Back to Toolkit</a>
+        </div>
+        
+        <!-- Config Bar -->
+        <div class="config-bar">
+            <button class="config-btn" id="configToggle" onclick="toggleConfig()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Settings
+            </button>
+            <div class="config-panel" id="configPanel">
+                <h3>⚙ Display Settings</h3>
+                <div class="config-option">
+                    <div>
+                        <div class="config-option-label">Results per page</div>
+                        <div class="config-option-desc">Seeds shown per page (1-200)</div>
+                    </div>
+                    <div class="stepper">
+                        <button id="stepDown" title="Decrease by 20">−</button>
+                        <input type="number" class="stepper-value" id="resultsPerPage" value="20" min="1" max="200" step="1">
+                        <button id="stepUp" title="Increase by 20">+</button>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="panel">
@@ -462,6 +795,7 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
             <div id="seedResults" class="seed-results">
                 <div class="no-results">👆 Click on proposals above to find matching seeds</div>
             </div>
+            <div class="pagination" id="pagination"></div>
         </div>
     </div>
     
@@ -470,9 +804,14 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
     <script>
 {proposals_js}{seed_db_js}
         let selectedProposals = [];
+        let currentPage = 1;
+        let resultsPerPage = parseInt(localStorage.getItem('seedFinderResultsPerPage')) || 20;
+        let currentMatches = [];
 
         function init() {{
             document.getElementById('seedCount').textContent = SEED_DB.seeds.length;
+            document.getElementById('resultsPerPage').value = resultsPerPage;
+            updateStepperButtons();
             renderProposals();
             updateResults();
         }}
@@ -505,6 +844,7 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
             const idx = selectedProposals.indexOf(name);
             if (idx >= 0) selectedProposals.splice(idx, 1);
             else if (selectedProposals.length < 3) selectedProposals.push(name);
+            currentPage = 1;
             renderProposals();
             renderSelectionSummary();
             updateResults();
@@ -525,6 +865,7 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
 
         function clearSelection() {{
             selectedProposals = [];
+            currentPage = 1;
             renderProposals();
             renderSelectionSummary();
             updateResults();
@@ -533,26 +874,36 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
         function updateResults() {{
             const resultsDiv = document.getElementById('seedResults');
             const countDiv = document.getElementById('resultsCount');
+            const paginationDiv = document.getElementById('pagination');
             
             if (selectedProposals.length === 0) {{
                 resultsDiv.innerHTML = '<div class="no-results">👆 Click on proposals above to find matching seeds</div>';
                 countDiv.textContent = 'Select proposals above to find seeds';
+                paginationDiv.innerHTML = '';
                 return;
             }}
             
-            const matches = SEED_DB.seeds.filter(entry => 
+            currentMatches = SEED_DB.seeds.filter(entry => 
                 selectedProposals.every(p => entry.p.includes(p))
             );
             
-            if (matches.length === 0) {{
+            if (currentMatches.length === 0) {{
                 resultsDiv.innerHTML = `<div class="no-results">😔 No seeds found with all selected proposals<br><small>Try selecting fewer proposals or different combinations</small></div>`;
                 countDiv.textContent = '0 seeds found';
+                paginationDiv.innerHTML = '';
                 return;
             }}
             
-            countDiv.textContent = `${{matches.length}} seed${{matches.length > 1 ? 's' : ''}} found`;
+            const totalPages = Math.ceil(currentMatches.length / resultsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages;
             
-            resultsDiv.innerHTML = matches.slice(0, 50).map(entry => {{
+            const startIdx = (currentPage - 1) * resultsPerPage;
+            const endIdx = Math.min(startIdx + resultsPerPage, currentMatches.length);
+            const pageMatches = currentMatches.slice(startIdx, endIdx);
+            
+            countDiv.textContent = `${{currentMatches.length}} seed${{currentMatches.length > 1 ? 's' : ''}} found (showing ${{startIdx + 1}}-${{endIdx}})`;
+            
+            resultsDiv.innerHTML = pageMatches.map(entry => {{
                 return `
                     <div class="seed-card">
                         <div class="seed-code" onclick="copySeed('${{entry.s}}', this)" title="Click to copy">${{entry.s}}</div>
@@ -568,7 +919,53 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
                         </div>
                     </div>
                 `;
-            }}).join('') + (matches.length > 50 ? `<div class="no-results">...and ${{matches.length - 50}} more</div>` : '');
+            }}).join('');
+            
+            renderPagination(totalPages);
+        }}
+
+        function renderPagination(totalPages) {{
+            const paginationDiv = document.getElementById('pagination');
+            if (totalPages <= 1) {{
+                paginationDiv.innerHTML = '';
+                return;
+            }}
+            
+            let html = '';
+            html += `<button class="page-btn" onclick="goToPage(${{currentPage - 1}})" ${{currentPage === 1 ? 'disabled' : ''}}>← Prev</button>`;
+            
+            const maxVisible = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+            if (endPage - startPage < maxVisible - 1) {{
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }}
+            
+            if (startPage > 1) {{
+                html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if (startPage > 2) html += `<span class="page-info">...</span>`;
+            }}
+            
+            for (let i = startPage; i <= endPage; i++) {{
+                html += `<button class="page-btn ${{i === currentPage ? 'active' : ''}}" onclick="goToPage(${{i}})">${{i}}</button>`;
+            }}
+            
+            if (endPage < totalPages) {{
+                if (endPage < totalPages - 1) html += `<span class="page-info">...</span>`;
+                html += `<button class="page-btn" onclick="goToPage(${{totalPages}})">${{totalPages}}</button>`;
+            }}
+            
+            html += `<button class="page-btn" onclick="goToPage(${{currentPage + 1}})" ${{currentPage === totalPages ? 'disabled' : ''}}>Next →</button>`;
+            
+            paginationDiv.innerHTML = html;
+        }}
+
+        function goToPage(page) {{
+            const totalPages = Math.ceil(currentMatches.length / resultsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            updateResults();
+            document.querySelector('.panel:nth-child(2)').scrollIntoView({{ behavior: 'smooth', block: 'start' }});
         }}
 
         function copySeed(seed, element) {{
@@ -585,16 +982,102 @@ FRONTEND_HTML_TEMPLATE = '''<!DOCTYPE html>
                 }}, 1500);
             }});
         }}
+        
+        function updateStepperButtons() {{
+            const value = parseInt(document.getElementById('resultsPerPage').value);
+            document.getElementById('stepDown').disabled = value <= 1;
+            document.getElementById('stepUp').disabled = value >= 200;
+        }}
+        
+        function setResultsPerPage(value) {{
+            value = Math.max(1, Math.min(200, Math.floor(value)));
+            resultsPerPage = value;
+            document.getElementById('resultsPerPage').value = value;
+            localStorage.setItem('seedFinderResultsPerPage', value);
+            updateStepperButtons();
+            currentPage = 1;
+            updateResults();
+        }}
 
+        // Event Listeners
         document.getElementById('proposalSearch').addEventListener('input', renderProposals);
+        
+        document.getElementById('stepDown').addEventListener('click', () => {{
+            setResultsPerPage(parseInt(document.getElementById('resultsPerPage').value) - 20);
+        }});
+        
+        document.getElementById('stepUp').addEventListener('click', () => {{
+            setResultsPerPage(parseInt(document.getElementById('resultsPerPage').value) + 20);
+        }});
+        
+        document.getElementById('resultsPerPage').addEventListener('change', function() {{
+            setResultsPerPage(parseInt(this.value) || 20);
+        }});
+        
+        // Close config panel when clicking outside
+        document.addEventListener('click', function(e) {{
+            const configBar = document.querySelector('.config-bar');
+            if (!configBar.contains(e.target)) {{
+                document.getElementById('configPanel').classList.remove('show');
+                document.getElementById('configToggle').classList.remove('active');
+            }}
+        }});
+        
+        function toggleConfig() {{
+            const panel = document.getElementById('configPanel');
+            const btn = document.getElementById('configToggle');
+            panel.classList.toggle('show');
+            btn.classList.toggle('active');
+        }}
+        
         init();
+        
+        // Show back link if toolkit index is accessible
+        (function() {{
+            const backLink = document.getElementById('back-to-toolkit');
+            const hostname = window.location.hostname;
+            const isSalvoHost = hostname.includes('salvo.host');
+            const isGitHubPages = hostname.includes('github.io');
+            const fromToolkit = new URLSearchParams(window.location.search).get('from') === 'toolkit';
+            const hasIndexReferrer = document.referrer.includes('index.html') || 
+                                     document.referrer.includes('tni-toolkit');
+            const isHttp = window.location.protocol.startsWith('http');
+            
+            if (isSalvoHost || fromToolkit || hasIndexReferrer) {{
+                backLink.classList.add('visible');
+                backLink.href = '../index.html';
+            }} else if (isGitHubPages) {{
+                backLink.classList.add('visible');
+                backLink.href = 'https://salvo-praxis.github.io/tni-toolkit/';
+            }} else if (isHttp) {{
+                fetch('../index.html', {{ method: 'HEAD' }})
+                    .then(response => {{
+                        if (response.ok) {{
+                            backLink.classList.add('visible');
+                            backLink.href = '../index.html';
+                        }}
+                    }})
+                    .catch(() => {{}});
+            }}
+        }})();
     </script>
     
-    <div class="site-footer">
-        <a href="https://github.com/salvo-praxis/tni-toolkit" target="_blank">TNI Toolkit</a>
-        <span class="sep">|</span>
-        <a href="https://store.steampowered.com/app/2939600/Tower_Networking_Inc/" target="_blank">Tower Networking Inc. on Steam</a>
-    </div>
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="../index.html">TNI Toolkit</a>
+            <span class="sep">|</span>
+            <a href="https://github.com/salvo-praxis/tni-toolkit" target="_blank">GitHub</a>
+            <span class="sep">|</span>
+            <a href="../contributions.html">Contributions Log</a>
+            <span class="sep">|</span>
+            <a href="https://store.steampowered.com/app/2939600/Tower_Networking_Inc/" target="_blank">TNI on Steam</a>
+        </div>
+        <p class="footer-note">Made with ❤️ for the TNI community</p>
+        <div class="footer-badges">
+            <span class="version-badge">v1.2.0</span>
+            <a href="https://github.com/salvo-praxis/tni-toolkit/blob/main/LICENSE" target="_blank" class="license-badge">MIT License — Free to use, modify, and share</a>
+        </div>
+    </footer>
 </body>
 </html>
 '''
@@ -981,7 +1464,8 @@ def update_frontend(seed_map):
         print(f"  Generating new frontend from template...")
         html = FRONTEND_HTML_TEMPLATE.format(
             proposals_js=FRONTEND_PROPOSALS_JS,
-            seed_db_js=seed_db_line
+            seed_db_js=seed_db_line,
+            generation_date=datetime.now().strftime("%Y-%m-%d")
         )
         with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -1012,7 +1496,8 @@ def update_frontend(seed_map):
         print("  Regenerating frontend from template...")
         html = FRONTEND_HTML_TEMPLATE.format(
             proposals_js=FRONTEND_PROPOSALS_JS,
-            seed_db_js=seed_db_line
+            seed_db_js=seed_db_line,
+            generation_date=datetime.now().strftime("%Y-%m-%d")
         )
         with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -1061,7 +1546,8 @@ def regenerate_frontend(seed_map):
     
     html = FRONTEND_HTML_TEMPLATE.format(
         proposals_js=FRONTEND_PROPOSALS_JS,
-        seed_db_js=seed_db_line
+        seed_db_js=seed_db_line,
+        generation_date=datetime.now().strftime("%Y-%m-%d")
     )
     
     with open(FRONTEND_HTML, 'w', encoding='utf-8') as f:

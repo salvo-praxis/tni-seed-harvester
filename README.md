@@ -31,6 +31,14 @@ This project:
 
 The seed database is embedded directly in the HTML file, so it works completely offline.
 
+### Features
+
+- **Settings Menu** — Click the gear icon to configure display options
+- **Pagination** — Browse large result sets with page navigation
+- **Results Per Page** — Adjustable from 1-200 seeds per page (default: 20)
+- **Back to Toolkit** — Quick link when launched from [TNI Toolkit](https://github.com/salvo-praxis/tni-toolkit)
+- **Click to Copy** — Click any seed code to copy to clipboard
+
 ---
 
 ## 📊 Current Database Stats
