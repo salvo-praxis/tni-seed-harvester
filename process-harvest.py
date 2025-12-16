@@ -198,11 +198,12 @@ FRONTEND_PROPOSALS_JS = '''        const PROPOSALS = {
 
 # Complete HTML template for generating the frontend from scratch
 # Uses modern NOC-style dark theme with green/blue accents
+# Version 1.3.0 - Added Spoiler Prevention mode
 FRONTEND_HTML_TEMPLATE = '''<!--
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║  TNI Starting Proposal Seed Finder                                           ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║  Version: 1.2.0                                                              ║
+║  Version: 1.3.0                                                              ║
 ║  Updated: {generation_date}                                                  ║
 ║  Part of: TNI Toolkit (https://github.com/salvo-praxis/tni-toolkit)          ║
 ║  Source:  TNI Seed Harvester (https://github.com/salvo-praxis/tni-seed-harvester)
@@ -217,6 +218,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
 ║    - Filter by proposal name, search by seed                                 ║
 ║    - Shows total starting cost for each seed                                 ║
 ║    - Configurable results per page with pagination                           ║
+║    - Spoiler Prevention mode to hide unselected proposals                    ║
 ║                                                                              ║
 ║  Data Pipeline:                                                              ║
 ║    AutoHotkey v2 automation → Tesseract OCR → Python processing → HTML       ║
@@ -226,6 +228,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
 ║    - Claude (Anthropic)                                                      ║
 ║                                                                              ║
 ║  Changelog:                                                                  ║
+║    1.3.0 - Added Spoiler Prevention mode to hide unselected proposals        ║
 ║    1.2.0 - Added config menu, pagination, results per page stepper           ║
 ║    1.1.0 - Renamed "Starting Proposal Seed Finder", header/footer, back link ║
 ║    1.0.0 - Initial release with 3,794 seeds, 455 combinations                ║
@@ -236,7 +239,29 @@ FRONTEND_HTML_TEMPLATE = '''<!--
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNI Starting Proposal Seed Finder</title> 
+    <title>Seed Finder - TNI Toolkit</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Find Tower Networking Inc. world seeds by starting proposals. 455 combinations across 3,794 verified seeds.">
+    <meta name="author" content="Salvo Praxis">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Seed Finder - TNI Toolkit">
+    <meta property="og:description" content="Find Tower Networking Inc. world seeds by starting proposals. 455 combinations across 3,794 verified seeds.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tni-toolkit.salvo.host/tools/seed-finder.html">
+    <meta property="og:site_name" content="TNI Toolkit">
+    <meta property="og:image" content="https://tni-toolkit.salvo.host/images/og-preview.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Seed Finder - TNI Toolkit">
+    <meta name="twitter:description" content="Find TNI world seeds by starting proposals. 455 combinations, 3,794 seeds.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://tni-toolkit.salvo.host/tools/seed-finder.html">
+    
     <style>
         * {{ box-sizing: border-box; }}
         
@@ -291,7 +316,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             margin-bottom: 30px;
         }}
         
-        h1 {{
+        .header h1 {{
             color: #00ff88;
             text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
             margin: 0 0 8px 0;
@@ -301,7 +326,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             text-transform: uppercase;
         }}
         
-        h1 span {{ color: #58a6ff; }}
+        .header h1 span {{ color: #58a6ff; }}
         
         .subtitle {{ color: #8b949e; margin: 0; font-size: 12px; }}
         .stats {{ color: #7d8590; font-size: 11px; margin-top: 8px; }}
@@ -530,7 +555,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             border: 1px solid #30363d;
             border-radius: 8px;
             padding: 16px;
-            min-width: 280px;
+            min-width: 320px;
             z-index: 100;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             display: none;
@@ -554,6 +579,12 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             justify-content: space-between;
             gap: 24px;
             min-height: 36px;
+        }}
+        
+        .config-option + .config-option {{
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #21262d;
         }}
         
         .config-option-label {{
@@ -631,11 +662,152 @@ FRONTEND_HTML_TEMPLATE = '''<!--
         .stepper-value::-webkit-outer-spin-button,
         .stepper-value::-webkit-inner-spin-button {{
             -webkit-appearance: none;
+            appearance: none;
             margin: 0;
         }}
         
         .stepper-value[type=number] {{
             -moz-appearance: textfield;
+            appearance: textfield;
+        }}
+        
+        /* Toggle Switch */
+        .toggle-switch {{
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }}
+        
+        .toggle-switch input {{
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }}
+        
+        .toggle-slider {{
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }}
+        
+        .toggle-slider:before {{
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: #8b949e;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }}
+        
+        .toggle-switch input:checked + .toggle-slider {{
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }}
+        
+        .toggle-switch input:checked + .toggle-slider:before {{
+            transform: translateX(20px);
+            background: #00ff88;
+        }}
+        
+        .toggle-switch:hover .toggle-slider {{
+            border-color: #58a6ff;
+        }}
+        
+        /* Redacted Proposal Styles */
+        .seed-proposal.redacted {{
+            background: repeating-linear-gradient(
+                90deg,
+                #1a1f2e 0px,
+                #1a1f2e 2px,
+                #21262d 2px,
+                #21262d 4px
+            );
+            border-left-color: #484f58;
+            position: relative;
+            overflow: hidden;
+            min-height: 52px;
+        }}
+        
+        .seed-proposal.redacted .seed-proposal-name,
+        .seed-proposal.redacted .seed-proposal-effect {{
+            visibility: hidden;
+        }}
+        
+        .redacted-overlay {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                90deg,
+                rgba(22, 27, 34, 0.95) 0%,
+                rgba(33, 38, 45, 0.98) 50%,
+                rgba(22, 27, 34, 0.95) 100%
+            );
+            border-left: 3px solid #484f58;
+            margin-left: -3px;
+        }}
+        
+        .redacted-bar {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: linear-gradient(180deg, #2d333b 0%, #21262d 100%);
+            border: 1px solid #484f58;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #6e7681;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }}
+        
+        .redacted-bar svg {{
+            width: 12px;
+            height: 12px;
+            opacity: 0.6;
+        }}
+        
+        /* Spoiler indicator badge */
+        .spoiler-badge {{
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(110, 118, 129, 0.15);
+            border: 1px solid #484f58;
+            border-radius: 4px;
+            font-size: 9px;
+            color: #6e7681;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: 8px;
+        }}
+        
+        .spoiler-badge.active {{
+            display: inline-flex;
+        }}
+        
+        .spoiler-badge svg {{
+            width: 11px;
+            height: 11px;
         }}
         
         /* Pagination */
@@ -755,6 +927,13 @@ FRONTEND_HTML_TEMPLATE = '''<!--
         
         <!-- Config Bar -->
         <div class="config-bar">
+            <span class="spoiler-badge" id="spoilerBadge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                Spoiler Prevention Active
+            </span>
             <button class="config-btn" id="configToggle" onclick="toggleConfig()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -774,6 +953,16 @@ FRONTEND_HTML_TEMPLATE = '''<!--
                         <input type="number" class="stepper-value" id="resultsPerPage" value="20" min="1" max="200" step="1">
                         <button id="stepUp" title="Increase by 20">+</button>
                     </div>
+                </div>
+                <div class="config-option">
+                    <div>
+                        <div class="config-option-label">Spoiler Prevention</div>
+                        <div class="config-option-desc">Hide unselected proposals for surprise</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="spoilerToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -806,11 +995,14 @@ FRONTEND_HTML_TEMPLATE = '''<!--
         let selectedProposals = [];
         let currentPage = 1;
         let resultsPerPage = parseInt(localStorage.getItem('seedFinderResultsPerPage')) || 20;
+        let spoilerPrevention = localStorage.getItem('seedFinderSpoilerPrevention') === 'true';
         let currentMatches = [];
 
         function init() {{
             document.getElementById('seedCount').textContent = SEED_DB.seeds.length;
             document.getElementById('resultsPerPage').value = resultsPerPage;
+            document.getElementById('spoilerToggle').checked = spoilerPrevention;
+            updateSpoilerBadge();
             updateStepperButtons();
             renderProposals();
             updateResults();
@@ -871,6 +1063,31 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             updateResults();
         }}
 
+        function renderProposalCard(proposalName, isMatched, isRedacted) {{
+            const info = PROPOSALS[proposalName];
+            
+            if (isRedacted) {{
+                return `<div class="seed-proposal redacted">
+                    <div class="seed-proposal-name">${{proposalName}}</div>
+                    <div class="seed-proposal-effect">${{info ? info.effect : 'Unknown'}}</div>
+                    <div class="redacted-overlay">
+                        <div class="redacted-bar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                            Proposal Redacted
+                        </div>
+                    </div>
+                </div>`;
+            }}
+            
+            return `<div class="seed-proposal ${{isMatched ? 'matched' : ''}}">
+                <div class="seed-proposal-name">${{proposalName}}</div>
+                <div class="seed-proposal-effect">${{info ? info.effect : 'Unknown'}}</div>
+            </div>`;
+        }}
+
         function updateResults() {{
             const resultsDiv = document.getElementById('seedResults');
             const countDiv = document.getElementById('resultsCount');
@@ -909,12 +1126,9 @@ FRONTEND_HTML_TEMPLATE = '''<!--
                         <div class="seed-code" onclick="copySeed('${{entry.s}}', this)" title="Click to copy">${{entry.s}}</div>
                         <div class="seed-proposals">
                             ${{entry.p.map(p => {{
-                                const info = PROPOSALS[p];
                                 const isMatched = selectedProposals.includes(p);
-                                return `<div class="seed-proposal ${{isMatched ? 'matched' : ''}}">
-                                    <div class="seed-proposal-name">${{p}}</div>
-                                    <div class="seed-proposal-effect">${{info ? info.effect : 'Unknown'}}</div>
-                                </div>`;
+                                const isRedacted = spoilerPrevention && !isMatched;
+                                return renderProposalCard(p, isMatched, isRedacted);
                             }}).join('')}}
                         </div>
                     </div>
@@ -998,6 +1212,22 @@ FRONTEND_HTML_TEMPLATE = '''<!--
             currentPage = 1;
             updateResults();
         }}
+        
+        function updateSpoilerBadge() {{
+            const badge = document.getElementById('spoilerBadge');
+            if (spoilerPrevention) {{
+                badge.classList.add('active');
+            }} else {{
+                badge.classList.remove('active');
+            }}
+        }}
+        
+        function setSpoilerPrevention(enabled) {{
+            spoilerPrevention = enabled;
+            localStorage.setItem('seedFinderSpoilerPrevention', enabled);
+            updateSpoilerBadge();
+            updateResults();
+        }}
 
         // Event Listeners
         document.getElementById('proposalSearch').addEventListener('input', renderProposals);
@@ -1012,6 +1242,10 @@ FRONTEND_HTML_TEMPLATE = '''<!--
         
         document.getElementById('resultsPerPage').addEventListener('change', function() {{
             setResultsPerPage(parseInt(this.value) || 20);
+        }});
+        
+        document.getElementById('spoilerToggle').addEventListener('change', function() {{
+            setSpoilerPrevention(this.checked);
         }});
         
         // Close config panel when clicking outside
@@ -1074,7 +1308,7 @@ FRONTEND_HTML_TEMPLATE = '''<!--
         </div>
         <p class="footer-note">Made with ❤️ for the TNI community</p>
         <div class="footer-badges">
-            <span class="version-badge">v1.2.0</span>
+            <span class="version-badge">v1.3.0</span>
             <a href="https://github.com/salvo-praxis/tni-toolkit/blob/main/LICENSE" target="_blank" class="license-badge">MIT License — Free to use, modify, and share</a>
         </div>
     </footer>
@@ -1100,233 +1334,191 @@ def get_timestamp():
     return datetime.now().strftime("%m-%d-%y-%H-%M-%S")
 
 
-def calculate_combinations(seed_map):
+def read_csv(filepath):
     """
-    Calculate unique proposal combinations from a seed map.
-    
-    Each seed has 3 proposals. This function finds all unique combinations
-    regardless of order (sorted for consistency).
-    
-    Args:
-        seed_map: Dict mapping seed codes to proposal lists
-        
-    Returns:
-        set: Set of tuples, each containing 3 sorted proposal names
-    """
-    found = set()
-    for props in seed_map.values():
-        # Sort to normalize order - (A,B,C) == (C,B,A)
-        combo = tuple(sorted(props))
-        found.add(combo)
-    return found
-
-
-def get_missing_combinations(found_combinations):
-    """
-    Determine which proposal combinations haven't been found yet.
-    
-    Compares found combinations against all possible 3-proposal combinations
-    from the 15 known proposals.
-    
-    Args:
-        found_combinations: Set of found combination tuples
-        
-    Returns:
-        list: Sorted list of missing combination tuples
-    """
-    all_combos = set(tuple(sorted(c)) for c in combinations(ALL_PROPOSALS, 3))
-    return sorted(all_combos - found_combinations)
-
-
-# =============================================================================
-# DATA PROCESSING FUNCTIONS
-# =============================================================================
-
-def read_csv(csv_path):
-    """
-    Read and parse the raw seed-log.csv file from the AHK harvester.
+    Read seed data from a CSV file.
     
     Expected CSV format:
-        seed,proposal1,proposal2,proposal3,raw_ocr,timestamp
-        
+        seed,proposal1,proposal2,proposal3
+        ABC12,Remote Backups,PADU,Lean Administration
+        ...
+    
     Args:
-        csv_path: Path object pointing to the CSV file
+        filepath: Path to the CSV file
         
     Returns:
-        list: List of dicts with seed data (seed, proposals, raw_ocr, timestamp)
+        list: List of dicts with 'seed' and 'proposals' keys
     """
     seeds = []
     
-    if not csv_path.exists():
-        return seeds
-    
-    with open(csv_path, 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
+    with open(filepath, 'r', newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader, None)  # Skip header row
+        
         for row in reader:
-            # Extract and clean fields
-            seed = row.get('seed', '').strip()
-            p1 = row.get('proposal1', '').strip()
-            p2 = row.get('proposal2', '').strip()
-            p3 = row.get('proposal3', '').strip()
-            
-            seeds.append({
-                'seed': seed,
-                'proposals': [p1, p2, p3],
-                'raw_ocr': row.get('raw_ocr', ''),
-                'timestamp': row.get('timestamp', '')
-            })
+            if len(row) >= 4:
+                seeds.append({
+                    'seed': row[0].strip(),
+                    'proposals': [row[1].strip(), row[2].strip(), row[3].strip()]
+                })
     
     return seeds
 
 
-def clean_seeds(seeds):
+def clean_seeds(raw_seeds):
     """
-    Clean and validate seed data from the harvester.
+    Clean and validate seed data.
     
-    Cleaning steps:
-        1. Remove entries with invalid seed codes (must be exactly 5 characters)
-        2. Remove entries containing UNKNOWN proposals (OCR failures)
-        3. Remove duplicate seed codes within the same harvest batch
-    
-    Note: Duplicate seed CODES are removed, but different seeds with the same
-    PROPOSAL combination are kept (different seeds can have same proposals).
+    Removes:
+        - Entries with "UNKNOWN" proposals (OCR failures)
+        - Entries with invalid seed codes (wrong length/format)
+        - Duplicate entries (same seed code)
     
     Args:
-        seeds: List of raw seed dicts from read_csv()
+        raw_seeds: List of raw seed entries from CSV
         
     Returns:
-        tuple: (clean_seeds_list, removal_stats_dict)
+        tuple: (clean_seeds list, removal_stats dict)
     """
     clean = []
-    seen_seeds = set()  # Track seed codes to detect within-batch duplicates
+    seen_seeds = set()
     
-    # Removal counters
-    unknown_count = 0
-    invalid_count = 0
-    dupe_count = 0
-    
-    for entry in seeds:
-        seed = entry['seed']
-        props = entry['proposals']
-        
-        # Validation: Seed codes must be exactly 5 characters
-        if not seed or len(seed) != 5:
-            invalid_count += 1
-            continue
-        
-        # Validation: Skip entries where OCR failed (contains UNKNOWN)
-        if 'UNKNOWN' in props:
-            unknown_count += 1
-            continue
-        
-        # Deduplication: Skip if we've already seen this seed code in this batch
-        if seed in seen_seeds:
-            dupe_count += 1
-            continue
-        
-        # Valid entry - add to clean list
-        seen_seeds.add(seed)
-        clean.append({
-            'seed': seed,
-            'proposals': props
-        })
-    
-    return clean, {
-        'unknown': unknown_count,
-        'invalid': invalid_count,
-        'duplicates': dupe_count
+    removed = {
+        'unknown': 0,
+        'invalid': 0,
+        'duplicates': 0
     }
+    
+    for entry in raw_seeds:
+        seed = entry['seed']
+        proposals = entry['proposals']
+        
+        # Check for UNKNOWN proposals (OCR failures)
+        if 'UNKNOWN' in proposals:
+            removed['unknown'] += 1
+            continue
+        
+        # Validate seed format (should be 5 alphanumeric characters)
+        if len(seed) != 5 or not seed.isalnum():
+            removed['invalid'] += 1
+            continue
+        
+        # Check for duplicates
+        if seed in seen_seeds:
+            removed['duplicates'] += 1
+            continue
+        
+        seen_seeds.add(seed)
+        clean.append(entry)
+    
+    return clean, removed
 
 
 def load_merged_database():
     """
     Load the existing merged seed database.
     
-    If no database exists yet, returns an empty structure ready for population.
+    Creates a new empty database structure if the file doesn't exist.
     
     Returns:
-        dict: Database structure with meta, proposals, and seeds
+        dict: Database with 'meta', 'proposals', and 'seeds' keys
     """
-    if MERGED_JSON.exists():
-        with open(MERGED_JSON, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    if not MERGED_JSON.exists():
+        return {
+            'meta': {
+                'created': datetime.now().isoformat(),
+                'updated': datetime.now().isoformat(),
+                'total_seeds': 0,
+                'combinations_found': 0,
+                'coverage_percent': 0.0
+            },
+            'proposals': PROPOSAL_DEFINITIONS,
+            'seeds': []
+        }
     
-    # Return empty structure for first run
-    return {
-        'meta': {
-            'total_seeds': 0,
-            'unique_proposals': 15,
-            'unique_combinations': 0,
-            'coverage_percent': 0.0,
-            'version': '1.0'
-        },
-        'proposals': PROPOSAL_DEFINITIONS,
-        'seeds': []
-    }
+    with open(MERGED_JSON, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 
 def merge_seeds(existing_data, new_seeds):
     """
     Merge new seeds into the existing database.
     
-    Merging is done by seed code (the unique key). If a seed code already
-    exists in the database, it is NOT overwritten - we keep the original.
-    
-    Different seeds can have the same proposal combinations - this is expected
-    and valuable data since seeds control more than just starting proposals.
+    Avoids duplicates by checking seed codes. Returns a seed_map
+    for convenient coverage calculation.
     
     Args:
-        existing_data: Dict from load_merged_database()
-        new_seeds: List of clean seed dicts to merge
+        existing_data: Current database dict
+        new_seeds: List of new seed entries to merge
         
     Returns:
-        tuple: (merged_seed_map, new_count, duplicate_count)
-            - merged_seed_map: Dict mapping all seed codes to proposals
-            - new_count: Number of genuinely new seeds added
-            - duplicate_count: Number of seeds already in database (skipped)
+        tuple: (seed_map dict, new_count int, duplicate_count int)
     """
-    # Build map from existing database
-    seed_map = {}
-    for entry in existing_data.get('seeds', []):
-        # Handle both full format (seed) and compact format (s)
-        seed = entry.get('seed', entry.get('s'))
-        props = entry.get('proposals', entry.get('p'))
-        seed_map[seed] = props
+    # Build map from existing data
+    seed_map = {e['seed']: e['proposals'] for e in existing_data.get('seeds', [])}
     
-    before_count = len(seed_map)
-    dupes_skipped = 0
+    new_count = 0
+    duplicate_count = 0
     
-    # Attempt to add new seeds
     for entry in new_seeds:
         seed = entry['seed']
-        props = entry['proposals']
-        
-        if seed in seed_map:
-            # Seed already exists in database - skip it
-            dupes_skipped += 1
+        if seed not in seed_map:
+            seed_map[seed] = entry['proposals']
+            new_count += 1
         else:
-            # New seed - add to database
-            seed_map[seed] = props
+            duplicate_count += 1
     
-    after_count = len(seed_map)
-    new_additions = after_count - before_count
-    
-    return seed_map, new_additions, dupes_skipped
+    return seed_map, new_count, duplicate_count
 
 
-# =============================================================================
-# FILE OPERATIONS
-# =============================================================================
-
-def save_clean_json(seeds, timestamp):
+def calculate_combinations(seed_map):
     """
-    Save cleaned seeds to a timestamped JSON file.
-    
-    This creates an individual harvest record that can be used for tracking
-    or re-processing if needed.
+    Calculate the unique 3-proposal combinations found in the database.
     
     Args:
-        seeds: List of clean seed dicts
+        seed_map: Dict mapping seed codes to proposal lists
+        
+    Returns:
+        set: Set of frozen sets, each representing a unique combination
+    """
+    found_combos = set()
+    
+    for proposals in seed_map.values():
+        # Sort to ensure consistent ordering, then freeze
+        combo = frozenset(proposals)
+        found_combos.add(combo)
+    
+    return found_combos
+
+
+def get_missing_combinations(found_combos):
+    """
+    Identify which 3-proposal combinations are still missing.
+    
+    Args:
+        found_combos: Set of found combinations (as frozen sets)
+        
+    Returns:
+        list: List of missing combinations as sorted tuples
+    """
+    # Generate all possible 3-combinations
+    all_possible = set(frozenset(c) for c in combinations(ALL_PROPOSALS, 3))
+    
+    # Find missing ones
+    missing = all_possible - found_combos
+    
+    # Convert to sorted tuples for display
+    return sorted([tuple(sorted(m)) for m in missing])
+
+
+def save_clean_json(clean_seeds, timestamp):
+    """
+    Save cleaned seed data to a timestamped JSON file.
+    
+    This preserves each harvest run for potential analysis or recovery.
+    
+    Args:
+        clean_seeds: List of cleaned seed entries
         timestamp: Timestamp string for filename
         
     Returns:
@@ -1335,64 +1527,55 @@ def save_clean_json(seeds, timestamp):
     filename = f"clean-seeds-{timestamp}.json"
     filepath = CLEAN_JSON_DIR / filename
     
-    output = {
-        'meta': {
-            'total_seeds': len(seeds),
-            'unique_proposals': 15,
-            'version': '1.0',
-            'created': datetime.now().isoformat()
-        },
-        'proposals': PROPOSAL_DEFINITIONS,
-        'seeds': seeds
+    data = {
+        'harvested': timestamp,
+        'count': len(clean_seeds),
+        'seeds': clean_seeds
     }
     
     with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(output, f, indent=2)
+        json.dump(data, f, indent=2)
     
     return filepath
 
 
 def save_merged_database(seed_map):
     """
-    Save the complete merged seed database.
+    Save the updated merged database.
     
-    This is the master database containing all collected seeds.
-    Also calculates and stores combination coverage statistics.
+    Includes metadata about coverage and combination statistics.
     
     Args:
         seed_map: Dict mapping seed codes to proposal lists
-        
-    Returns:
-        set: Set of found combinations (for reporting)
     """
-    # Calculate coverage statistics
+    # Calculate statistics
     found_combos = calculate_combinations(seed_map)
     coverage = 100 * len(found_combos) / TOTAL_COMBINATIONS
     
-    output = {
+    # Build structured data
+    seeds_list = [{'seed': s, 'proposals': p} for s, p in sorted(seed_map.items())]
+    
+    data = {
         'meta': {
-            'total_seeds': len(seed_map),
-            'unique_proposals': 15,
-            'unique_combinations': len(found_combos),
-            'coverage_percent': round(coverage, 4),
-            'version': datetime.now().strftime("%Y%m%d"),  # Version by date
-            'updated': datetime.now().isoformat()
+            'updated': datetime.now().isoformat(),
+            'total_seeds': len(seeds_list),
+            'combinations_found': len(found_combos),
+            'total_combinations': TOTAL_COMBINATIONS,
+            'coverage_percent': round(coverage, 4)
         },
         'proposals': PROPOSAL_DEFINITIONS,
-        'seeds': [{'seed': s, 'proposals': p} for s, p in sorted(seed_map.items())]
+        'seeds': seeds_list
     }
     
     with open(MERGED_JSON, 'w', encoding='utf-8') as f:
-        json.dump(output, f, indent=2)
-    
-    return found_combos
+        json.dump(data, f, indent=2)
 
 
 def archive_csv(timestamp):
     """
-    Archive the raw CSV to the dirty collection folder.
+    Archive the raw CSV to the dirty collection directory.
     
-    Preserves the original harvester output with a timestamp for reference.
+    Preserves raw data for potential reprocessing or analysis.
     
     Args:
         timestamp: Timestamp string for filename
